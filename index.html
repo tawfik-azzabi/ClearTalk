@@ -799,45 +799,110 @@
     });
   }
 
-  // ── INTERRUPTIONS avec TTS ──
+  // ── INTERRUPTIONS — Safari iOS TTS via chained onend ──
+  // Safari blocks speak() from setTimeout.
+  // Fix: enqueue silence from Start tap, then chain each interruption via onend.
+  // Visual display triggered inside onend — always in sync with audio.
+
+  let pendingIntrItems = [];
+  let ttsChainActive = false;
+
   function scheduleInterruptions() {
     clearAllInterruptions();
-    const delays = [
-      38000 + Math.floor(Math.random() * 8000),
-      88000 + Math.floor(Math.random() * 8000)
-    ];
-    delays.forEach(delay => {
-      if (delay >= timeLeft * 1000) return;
-      interruptionTimeouts.push(setTimeout(() => {
-        if (!timerRunning) return;
-        const item = pick(interruptions);
-        showInterruption(item);
-      }, delay));
-    });
+
+    const d1 = 38000 + Math.floor(Math.random() * 8000);  // ~40s
+    const d2 = 88000 + Math.floor(Math.random() * 8000);  // ~90s
+    const item1 = pick(interruptions);
+    const item2 = pick(interruptions);
+
+    pendingIntrItems = [
+      { delay: d1, item: item1 },
+      { delay: d2, item: item2 }
+    ].filter(p => p.delay < timeLeft * 1000);
+
+    if (pendingIntrItems.length === 0) return;
+
+    if (ttsOK) {
+      ttsChainActive = true;
+      startTTSChain(pendingIntrItems, 0);
+    } else {
+      // No TTS: fallback to setTimeout for visual only
+      pendingIntrItems.forEach(({ delay, item }) => {
+        interruptionTimeouts.push(setTimeout(() => {
+          if (!timerRunning) return;
+          showInterruptionVisual(item);
+        }, delay));
+      });
+    }
   }
 
-  function showInterruption(item) {
+  function startTTSChain(items, index) {
+    if (!ttsChainActive || index >= items.length || !timerRunning) return;
+
+    const { delay, item } = items[index];
+
+    // How long to wait from NOW (accounting for time already elapsed)
+    const elapsed = (120 - timeLeft) * 1000;
+    const waitMs = Math.max(300, delay - elapsed);
+
+    // Build a silence utterance that lasts approximately waitMs
+    // We use a repeated string — more chars = more time at given rate
+    // Calibration: at rate=1, ~3-4 chars/second on Safari
+    // So chars needed ≈ waitMs / 1000 * 3.5
+    const chars = Math.max(1, Math.round((waitMs / 1000) * 3.5));
+    const silenceText = 'a'.repeat(Math.min(chars, 200)); // cap at 200
+    const silence = new SpeechSynthesisUtterance(silenceText);
+    silence.volume = 0;
+    silence.lang = 'fr-FR';
+    silence.rate = 1.0;
+
+    silence.onend = () => {
+      if (!ttsChainActive || !timerRunning) return;
+
+      // Trigger visual display
+      showInterruptionVisual(item);
+
+      // Speak the interruption
+      const voices = window.speechSynthesis.getVoices();
+      const frVoice = voices.find(v => v.lang.startsWith('fr') && !v.name.toLowerCase().includes('compact'))
+                   || voices.find(v => v.lang.startsWith('fr')) || null;
+
+      const utt = new SpeechSynthesisUtterance(item.voice);
+      utt.lang = 'fr-FR';
+      utt.rate = 0.92;
+      utt.pitch = 1.0;
+      utt.volume = 1.0;
+      if (frVoice) utt.voice = frVoice;
+
+      utt.onend = () => {
+        // Chain to next interruption
+        startTTSChain(items, index + 1);
+      };
+
+      window.speechSynthesis.speak(utt);
+    };
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(silence);
+  }
+
+  function showInterruptionVisual(item) {
     document.getElementById('interruptionText').textContent = `"${item.text}"`;
     document.getElementById('timerRow').classList.add('interrupting');
     document.getElementById('interruption').classList.add('show');
     document.getElementById('intrBadgeText').textContent = item.text;
     document.getElementById('intrBadge').style.display = 'inline-flex';
-
-    // TTS — speak the interruption (Safari iOS compatible)
-    if (ttsOK) {
-      speakInterruption(item.voice);
-    }
-
     setTimeout(() => {
       document.getElementById('interruption').classList.remove('show');
       document.getElementById('timerRow').classList.remove('interrupting');
       document.getElementById('intrBadge').style.display = 'none';
-      if (ttsOK) window.speechSynthesis.cancel();
     }, 5000);
   }
 
   function clearAllInterruptions() {
     interruptionTimeouts.forEach(t => clearTimeout(t)); interruptionTimeouts = [];
+    pendingIntrItems = [];
+    ttsChainActive = false;
     document.getElementById('interruption').classList.remove('show');
     document.getElementById('timerRow').classList.remove('interrupting');
     document.getElementById('intrBadge').style.display = 'none';
@@ -846,57 +911,14 @@
 
   function pauseInterruptions() {
     interruptionTimeouts.forEach(t => clearTimeout(t)); interruptionTimeouts = [];
+    ttsChainActive = false;
     if (ttsOK) window.speechSynthesis.cancel();
   }
 
-  // ── TTS SAFARI FIX ──
-  // Safari iOS requires speechSynthesis to be "unlocked" via a direct user gesture.
-  // Strategy: on first tap anywhere, speak a silent utterance to unlock the engine.
-  // Subsequent calls from setTimeout will then work.
-  let ttsUnlocked = false;
-
-  function unlockTTS() {
-    if (ttsUnlocked || !ttsOK) return;
-    ttsUnlocked = true;
-    const silent = new SpeechSynthesisUtterance('');
-    silent.volume = 0;
-    window.speechSynthesis.speak(silent);
-    document.removeEventListener('touchstart', unlockTTS);
-    document.removeEventListener('click', unlockTTS);
-  }
-
+  // Preload voices
   if (ttsOK) {
-    // Load voices
     window.speechSynthesis.getVoices();
     window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-    // Unlock on first interaction
-    document.addEventListener('touchstart', unlockTTS, { passive: true });
-    document.addEventListener('click', unlockTTS);
-  }
-
-  function speakInterruption(text) {
-    if (!ttsOK) return;
-
-    // Safari fix: cancel + tiny delay before speaking from a timeout
-    window.speechSynthesis.cancel();
-
-    setTimeout(() => {
-      const utt = new SpeechSynthesisUtterance(text);
-      utt.lang = 'fr-FR';
-      utt.rate = 0.92;
-      utt.pitch = 1.0;
-      utt.volume = 1.0;
-
-      const voices = window.speechSynthesis.getVoices();
-      // Prefer non-compact French voice for better quality
-      const frVoice = voices.find(v => v.lang.startsWith('fr') && !v.name.toLowerCase().includes('compact'))
-                   || voices.find(v => v.lang.startsWith('fr'));
-      if (frVoice) utt.voice = frVoice;
-
-      // Safari iOS workaround: resume if paused (common bug)
-      if (window.speechSynthesis.paused) window.speechSynthesis.resume();
-      window.speechSynthesis.speak(utt);
-    }, 80);
   }
 
   function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
