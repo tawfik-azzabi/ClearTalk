@@ -54,7 +54,7 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
 /* CHAIN */
 .chain-center{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;width:100%}
 .chain-word-label{font-family:"DM Sans",sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}
-.chain-word{font-family:"Unbounded",sans-serif;font-size:clamp(13px,5.5vw,32px);font-weight:900;letter-spacing:-.03em;color:var(--text);text-align:center;white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;line-height:1.1;margin-bottom:18px;padding:0 8px}
+.chain-word{font-family:"Unbounded",sans-serif;font-size:32px;font-weight:900;letter-spacing:-.03em;color:var(--text);text-align:center;white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;line-height:1.1;margin-bottom:18px;padding:0 8px}
 .chain-timer-big{font-family:"Unbounded",sans-serif;font-size:52px;font-weight:300;letter-spacing:-.05em;color:var(--text);text-align:center;margin-bottom:8px;line-height:1}
 .chain-progress-bar{width:75%;height:2px;background:rgba(255,255,255,.05);border-radius:1px;margin-bottom:14px;position:relative;overflow:hidden}
 .chain-progress-fill{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,var(--blue),rgba(61,122,255,.3));border-radius:1px;transition:width 1s linear}
@@ -67,25 +67,23 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
 .pip{height:3px;border-radius:2px;transition:all .3s}
 .pip.active{width:28px;background:var(--blue)}.pip.done{width:18px;background:rgba(255,255,255,.15)}.pip.pending{width:18px;background:rgba(255,255,255,.06)}
 /* SUBJECT — no card, centered bold */
-.subject-text{font-family:"DM Sans",sans-serif;font-size:15px;font-weight:600;line-height:1.4;color:var(--text);text-align:center;margin-bottom:12px;width:100%;flex-shrink:0}
+.subject-text{font-family:"Unbounded",sans-serif;font-size:17px;font-weight:600;line-height:1.3;color:var(--text);text-align:center;margin-bottom:16px;width:100%;flex-shrink:0;letter-spacing:-.03em}
 /* SEPARATOR */
-.sep{width:100%;display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-shrink:0}
-.sep-line{flex:1;height:1px;background:rgba(255,255,255,.06)}
-.sep-dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.12);flex-shrink:0}
+.sep{width:60px;height:2px;background:linear-gradient(90deg,var(--blue),rgba(61,122,255,.3));border-radius:1px;margin:0 auto 16px;flex-shrink:0}
 /* AMORCE — no border */
-.amorce-label{font-family:"DM Sans",sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(61,122,255,.55);margin-bottom:4px;text-align:center;width:100%;flex-shrink:0}
-.amorce-text{font-family:"Instrument Serif",serif;font-size:15px;font-style:italic;color:#7aa8ff;line-height:1.3;text-align:center;margin-bottom:12px;width:100%;flex-shrink:0}
+.amorce-label{font-family:"DM Sans",sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(61,122,255,.55);margin-bottom:6px;text-align:center;width:100%;flex-shrink:0}
+.amorce-text{font-family:"Instrument Serif",serif;font-size:18px;font-style:italic;color:#7aa8ff;line-height:1.3;text-align:center;margin-bottom:14px;width:100%;flex-shrink:0}
 /* SEPARATOR 2 */
-.sep2{width:100%;height:1px;background:rgba(255,255,255,.06);margin-bottom:10px;flex-shrink:0}
+.sep2{display:none}
 /* STRUCTURE CARD — keep border */
 .struct-card{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:10px;flex-shrink:0}
-.struct-steps{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
-.struct-step{font-family:"DM Sans",sans-serif;font-size:11px;color:var(--text-mid)}
+.struct-steps{display:flex;align-items:center;justify-content:flex-start;gap:6px;flex-wrap:wrap}
+.struct-step{font-family:"DM Sans",sans-serif;font-size:12px;color:var(--text-mid)}
 .struct-arrow{color:var(--blue);font-size:10px}
 /* RESCUE */
 .rescue-block{width:100%;border-left:2px solid var(--yellow);padding:5px 12px;margin-bottom:12px;flex-shrink:0}
-.rescue-label{font-family:"DM Sans",sans-serif;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(232,255,71,.4);margin-bottom:2px}
-.rescue-text{font-family:"DM Sans",sans-serif;font-size:11px;font-style:italic;color:var(--yellow);opacity:.85}
+.rescue-label{font-family:"DM Sans",sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(232,255,71,.4);margin-bottom:6px}
+.rescue-text{font-family:"DM Sans",sans-serif;font-size:18px;font-style:italic;color:var(--yellow);opacity:.85}
 /* REC ROW — keep border */
 .rec-row{width:100%;display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:11px 14px;margin-bottom:10px;transition:border-color .3s;flex-shrink:0}
 .rec-row.active{border-color:rgba(255,60,60,.3)}
@@ -99,12 +97,12 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
 .copy-btn{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:11px 16px;font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;color:var(--text-mid);text-align:center;cursor:pointer;transition:all .2s;margin-bottom:10px;display:none}
 .copy-btn.visible{display:block;animation:fadeUp .3s ease}
 /* TIMER — large centered */
-.timer-section{width:100%;display:flex;flex-direction:column;align-items:center;margin-bottom:10px;flex-shrink:0}
+.timer-section{width:100%;display:flex;flex-direction:column;align-items:center;margin-bottom:8px;margin-top:10px;flex-shrink:0}
 .timer-display{font-family:"Unbounded",sans-serif;font-size:56px;font-weight:300;letter-spacing:-.05em;color:var(--text);line-height:1;margin-bottom:14px;text-align:center}
 .timer-display.running{animation:timerPulse 1s ease-in-out infinite}
 @keyframes timerPulse{0%,100%{opacity:1}50%{opacity:.45}}
 .timer-buttons{display:flex;gap:8px;width:100%}
-.timer-buttons .btn-primary{flex:2}.timer-buttons .btn-secondary{flex:1}
+.timer-buttons .btn{flex:1;padding:13px;font-size:13px}
 /* BUTTONS */
 .btn-stack{width:100%;display:flex;flex-direction:column;gap:8px;margin-top:auto;padding-top:8px;flex-shrink:0}
 .btn{width:100%;padding:14px;border-radius:var(--radius);border:none;cursor:pointer;font-family:"DM Sans",sans-serif;font-size:14px;font-weight:500;transition:all .15s ease;text-align:center}
@@ -145,6 +143,7 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
   <div class="synth-quote" id="synthText">—</div>
   <div class="synth-timer" id="synthTimer">0:20</div>
   <div class="synth-hint">Résume ton idée principale en une phrase.</div>
+  <button onclick="document.getElementById('synthOverlay').classList.remove('show');clearInterval(synthTimerInterval);" style="margin-top:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:10px 24px;font-family:'DM Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.35);cursor:pointer;letter-spacing:.04em">Skip</button>
 </div>
 
 <div class="app">
@@ -204,12 +203,9 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
     <!-- PANEL 2: IMPRO -->
     <div class="panel" id="panel2">
       <div class="brand-bar" style="padding-bottom:2px"><div class="app-name">ClearTalk</div><div class="app-tagline">Flow Under Pressure</div></div>
-      <div class="impro-header">
-        <div class="impro-title" id="improTitle">Improvisation 1/3</div>
-        <div class="impro-pips"><div class="pip" id="pip0"></div><div class="pip" id="pip1"></div><div class="pip" id="pip2"></div></div>
-      </div>
+
       <div class="subject-text" id="sujetText">—</div>
-      <div class="sep"><div class="sep-line"></div><div class="sep-dot"></div><div class="sep-line"></div></div>
+      <div class="sep"></div>
       <div class="amorce-label">Commencez par…</div>
       <div class="amorce-text" id="amorceText">—</div>
       <div class="sep2"></div>
@@ -238,10 +234,8 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
         <div class="timer-buttons">
           <button class="btn btn-primary" id="timerBtn" onclick="toggleTimer()">Start</button>
           <button class="btn btn-secondary" onclick="hardResetTimer()">Reset</button>
+          <button class="btn btn-secondary" id="improNextBtn">—</button>
         </div>
-      </div>
-      <div class="btn-stack">
-        <button class="btn btn-primary" id="improNextBtn">—</button>
       </div>
     </div>
   </div>
@@ -290,12 +284,12 @@ function setPB(pct){document.getElementById('progressBar').style.width=pct+'%';}
 function startBreath(){if(breathRunning)return;breathRunning=true;const btn=document.getElementById('breathBtn');btn.style.opacity='.3';btn.disabled=true;runCycle();}
 function runCycle(){if(breathRound>=3){document.getElementById('breathNum').textContent='✓';document.getElementById('breathNum').classList.add('done');document.getElementById('breathInstr').textContent='Prêt.';document.getElementById('breathRing').classList.remove('expand');setTimeout(()=>{const btn=document.getElementById('breathBtn');btn.style.opacity='1';btn.disabled=false;btn.textContent='Commencer la chaîne';btn.onclick=goToChain;},500);return;}let c=6;document.getElementById('breathNum').textContent=c;document.getElementById('breathInstr').textContent='Expire lentement…';document.getElementById('breathRing').classList.add('expand');breathInterval=setInterval(()=>{c--;document.getElementById('breathNum').textContent=c;if(c<=0){clearInterval(breathInterval);document.getElementById(`r${breathRound}`).classList.add('done');document.getElementById('breathRing').classList.remove('expand');breathRound++;if(breathRound<3){document.getElementById('breathInstr').textContent='Inspire…';setTimeout(runCycle,900);}else runCycle();}},1000);}
 
-function goToChain(){clearInterval(breathInterval);newChainWord();chainTime=90;chainRunning=false;clearInterval(chainInterval);document.getElementById('chainTimer').textContent='1:30';document.getElementById('chainTimer').style.color='';document.getElementById('chainProgressFill').style.width='100%';const btn=document.getElementById('chainBtn');btn.textContent='Commencer';btn.onclick=toggleChain;document.getElementById('stepLabel').textContent='Chaîne de mots';setPB(20);showPanel(1);}
-function newChainWord(){const cur=document.getElementById('chainWord').textContent;let w;do{w=pick(chainWords);}while(w===cur&&chainWords.length>1);document.getElementById('chainWord').textContent=w;if(chainRunning){clearInterval(chainInterval);chainRunning=false;chainTime=90;document.getElementById('chainTimer').textContent='1:30';document.getElementById('chainTimer').style.color='';document.getElementById('chainProgressFill').style.width='100%';document.getElementById('chainBtn').textContent='Commencer';document.getElementById('chainBtn').onclick=toggleChain;}}
+function goToChain(){clearInterval(breathInterval);newChainWord();chainTime=90;chainRunning=false;clearInterval(chainInterval);document.getElementById('chainTimer').textContent='1:30';document.getElementById('chainTimer').style.color='';document.getElementById('chainProgressFill').style.width='100%';const btn=document.getElementById('chainBtn');btn.textContent='Commencer';btn.onclick=toggleChain;document.getElementById('stepLabel').textContent='Chaîne de mots';setPB(20);showPanel(1);setTimeout(fitChainWord,50);}
+function newChainWord(){const cur=document.getElementById('chainWord').textContent;let w;do{w=pick(chainWords);}while(w===cur&&chainWords.length>1);document.getElementById('chainWord').textContent=w;fitChainWord();if(chainRunning){clearInterval(chainInterval);chainRunning=false;chainTime=90;document.getElementById('chainTimer').textContent='1:30';document.getElementById('chainTimer').style.color='';document.getElementById('chainProgressFill').style.width='100%';document.getElementById('chainBtn').textContent='Commencer';document.getElementById('chainBtn').onclick=toggleChain;}}
 function toggleChain(){if(chainRunning){clearInterval(chainInterval);chainRunning=false;document.getElementById('chainBtn').textContent='Reprendre';}else{chainRunning=true;document.getElementById('chainBtn').textContent='Pause';chainInterval=setInterval(()=>{chainTime--;document.getElementById('chainTimer').textContent=formatTime(chainTime);document.getElementById('chainProgressFill').style.width=(chainTime/90*100)+'%';if(chainTime<=15)document.getElementById('chainTimer').style.color='rgba(255,107,53,.9)';if(chainTime<=0){clearInterval(chainInterval);chainRunning=false;document.getElementById('chainTimer').textContent='✓';document.getElementById('chainTimer').style.color='rgba(71,255,138,.9)';document.getElementById('chainBtn').textContent="Passer à l'improvisation";document.getElementById('chainBtn').onclick=startImpros;playBeep();}},1000);}}
 
 function startImpros(){clearInterval(chainInterval);chainRunning=false;currentImpro=0;loadImpro();}
-function loadImpro(){clearAllInterruptions();stopRecording();hardResetTimer();clearInterval(synthTimerInterval);document.getElementById('synthOverlay').classList.remove('show');document.getElementById('transcriptBox').textContent='';document.getElementById('transcriptBox').classList.remove('visible');document.getElementById('copyBtn').classList.remove('visible');transcript='';['pip0','pip1','pip2'].forEach((id,i)=>{const el=document.getElementById(id);el.classList.remove('active','done','pending');el.classList.add(i<currentImpro?'done':i===currentImpro?'active':'pending');});currentAmorce=pick(amorces);currentSubject=pick(sujets);document.getElementById('improTitle').textContent=`Improvisation ${currentImpro+1}/3`;document.getElementById('sujetText').textContent=currentSubject;document.getElementById('amorceText').textContent=currentAmorce;document.getElementById('rescueText').textContent=pick(rescues);document.getElementById('recDot').classList.remove('active');document.getElementById('recRow').classList.remove('active');document.getElementById('recLabel').textContent=speechOK?'Enregistrement désactivé':'Non supporté (Chrome requis)';document.getElementById('recLabel').classList.remove('active');document.getElementById('recBtn').textContent='Activer';document.getElementById('recBtn').disabled=!speechOK;const isLast=currentImpro===2;const btn=document.getElementById('improNextBtn');btn.textContent=isLast?'Session suivante':'Improvisation suivante';btn.style.background=isLast?'rgba(255,107,53,.85)':'';btn.style.boxShadow=isLast?'0 4px 18px rgba(255,107,53,.2)':'';btn.onclick=isLast?nextSession:nextImpro;setPB(40+currentImpro*20);document.getElementById('stepLabel').textContent=`Improvisation ${currentImpro+1} / 3`;showPanel(2);}
+function loadImpro(){clearAllInterruptions();stopRecording();hardResetTimer();clearInterval(synthTimerInterval);document.getElementById('synthOverlay').classList.remove('show');document.getElementById('transcriptBox').textContent='';document.getElementById('transcriptBox').classList.remove('visible');document.getElementById('copyBtn').classList.remove('visible');transcript='';currentAmorce=pick(amorces);currentSubject=pick(sujets);document.getElementById('sujetText').textContent=currentSubject;document.getElementById('amorceText').textContent=currentAmorce;document.getElementById('rescueText').textContent=pick(rescues);document.getElementById('recDot').classList.remove('active');document.getElementById('recRow').classList.remove('active');document.getElementById('recLabel').textContent=speechOK?'Enregistrement désactivé':'Non supporté (Chrome requis)';document.getElementById('recLabel').classList.remove('active');document.getElementById('recBtn').textContent='Activer';document.getElementById('recBtn').disabled=!speechOK;const isLast=currentImpro===2;const btn=document.getElementById('improNextBtn');btn.textContent=isLast?'Session suivante':'Improvisation suivante';btn.style.background=isLast?'rgba(255,107,53,.85)':'';btn.style.boxShadow=isLast?'0 4px 18px rgba(255,107,53,.2)':'';btn.onclick=isLast?nextSession:nextImpro;setPB(40+currentImpro*20);document.getElementById('stepLabel').textContent=`Improvisation ${currentImpro+1} / 3`;showPanel(2);}
 function nextImpro(){clearAllInterruptions();stopRecording();clearInterval(synthTimerInterval);document.getElementById('synthOverlay').classList.remove('show');currentImpro++;loadImpro();}
 function nextSession(){clearAllInterruptions();stopRecording();clearInterval(synthTimerInterval);document.getElementById('synthOverlay').classList.remove('show');sessionCount++;renderDots();setPB(100);if(sessionCount===MIN&&!milestoneShown){milestoneShown=true;const m=document.getElementById('milestone');m.classList.add('show');setTimeout(()=>m.classList.remove('show'),4000);}breathRound=0;breathRunning=false;clearInterval(breathInterval);document.getElementById('breathNum').textContent='6';document.getElementById('breathNum').classList.remove('done');document.getElementById('breathInstr').textContent='Prépare-toi.';document.getElementById('breathRing').classList.remove('expand');const bBtn=document.getElementById('breathBtn');bBtn.style.opacity='1';bBtn.disabled=false;bBtn.textContent='Commencer';bBtn.onclick=startBreath;['r0','r1','r2'].forEach(id=>document.getElementById(id).classList.remove('done'));setTimeout(()=>{setPB(0);goToChain();},600);}
 
@@ -316,6 +310,17 @@ function showInterruptionVisual(item){document.getElementById('interruptionText'
 function clearAllInterruptions(){interruptionTimeouts.forEach(t=>clearTimeout(t));interruptionTimeouts=[];pendingIntrItems=[];ttsChainActiveLocal=false;document.getElementById('interruption').classList.remove('show');if(ttsOK)window.speechSynthesis.cancel();}
 function pauseInterruptions(){interruptionTimeouts.forEach(t=>clearTimeout(t));interruptionTimeouts=[];ttsChainActiveLocal=false;if(ttsOK)window.speechSynthesis.cancel();}
 
+function fitChainWord(){
+  const el=document.getElementById('chainWord');
+  if(!el)return;
+  // Reset to max, then shrink until it fits on one line
+  let size=52;
+  el.style.fontSize=size+'px';
+  const parent=el.parentElement;
+  if(!parent)return;
+  const maxW=parent.offsetWidth-32;
+  while(el.scrollWidth>maxW&&size>16){size-=1;el.style.fontSize=size+'px';}
+}
 function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
 function formatTime(s){return `${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`;}
 function showPanel(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById(`panel${id}`).classList.add('active');}
