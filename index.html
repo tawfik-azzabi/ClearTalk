@@ -291,13 +291,13 @@
         </div>
       </div>
 
-      <div class="card" style="border-color:rgba(61,122,255,0.18);background:rgba(61,122,255,0.04)">
-        <div class="card-label">Amorce — dis-la immédiatement</div>
-        <div class="card-content" id="amorceText">—</div>
-      </div>
       <div class="card">
         <div class="card-label">Sujet</div>
         <div class="card-content white" id="sujetText">—</div>
+      </div>
+      <div class="card" style="border-color:rgba(61,122,255,0.18);background:rgba(61,122,255,0.04)">
+        <div class="card-label">Amorce — Commencez par…</div>
+        <div class="card-content" id="amorceText">—</div>
       </div>
       <div class="card structure">
         <div class="card-label" id="structureLabel">Structure</div>
@@ -799,19 +799,20 @@
     });
   }
 
-  // ── INTERRUPTIONS — Safari iOS TTS via chained onend ──
-  // Safari blocks speak() from setTimeout.
-  // Fix: enqueue silence from Start tap, then chain each interruption via onend.
-  // Visual display triggered inside onend — always in sync with audio.
+  // ── INTERRUPTIONS — Safari iOS TTS with dynamic calibration ──
+  // Safari's char-based silence is unpredictable. We calibrate at Start:
+  // speak a known-length string, measure actual duration via onend, derive chars/ms ratio.
 
   let pendingIntrItems = [];
   let ttsChainActive = false;
+  let charsPerMs = null; // calibrated at first timer start
 
   function scheduleInterruptions() {
     clearAllInterruptions();
 
-    const d1 = 38000 + Math.floor(Math.random() * 8000);  // ~40s
-    const d2 = 88000 + Math.floor(Math.random() * 8000);  // ~90s
+    // Target: first interruption at ~40s (±5s), second 40s later (±5s)
+    const d1 = 35000 + Math.floor(Math.random() * 10000);  // 35–45s
+    const d2 = d1 + 35000 + Math.floor(Math.random() * 10000); // d1 + 35–45s
     const item1 = pick(interruptions);
     const item2 = pick(interruptions);
 
@@ -824,9 +825,12 @@
 
     if (ttsOK) {
       ttsChainActive = true;
-      startTTSChain(pendingIntrItems, 0);
+      if (charsPerMs === null) {
+        calibrateThenChain(pendingIntrItems);
+      } else {
+        startTTSChain(pendingIntrItems, 0, performance.now());
+      }
     } else {
-      // No TTS: fallback to setTimeout for visual only
       pendingIntrItems.forEach(({ delay, item }) => {
         interruptionTimeouts.push(setTimeout(() => {
           if (!timerRunning) return;
@@ -836,21 +840,35 @@
     }
   }
 
-  function startTTSChain(items, index) {
+  function calibrateThenChain(items) {
+    // Speak a 20-char string silently and time it
+    const testStr = 'a'.repeat(20);
+    const calib = new SpeechSynthesisUtterance(testStr);
+    calib.volume = 0;
+    calib.lang = 'fr-FR';
+    calib.rate = 1.0;
+    const t0 = performance.now();
+    calib.onend = () => {
+      const ms = performance.now() - t0;
+      charsPerMs = 20 / Math.max(ms, 100); // chars per ms
+      startTTSChain(items, 0, performance.now());
+    };
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(calib);
+  }
+
+  function startTTSChain(items, index, chainStartTime) {
     if (!ttsChainActive || index >= items.length || !timerRunning) return;
 
     const { delay, item } = items[index];
+    const nowElapsed = performance.now() - chainStartTime;
+    const waitMs = Math.max(500, delay - nowElapsed);
 
-    // How long to wait from NOW (accounting for time already elapsed)
-    const elapsed = (120 - timeLeft) * 1000;
-    const waitMs = Math.max(300, delay - elapsed);
+    // Use calibrated chars/ms, fallback to 0.02 chars/ms if not calibrated
+    const rate = charsPerMs || 0.02;
+    const chars = Math.max(5, Math.round(waitMs * rate));
+    const silenceText = 'a'.repeat(Math.min(chars, 500));
 
-    // Build a silence utterance that lasts approximately waitMs
-    // We use a repeated string — more chars = more time at given rate
-    // Calibration: at rate=1, ~3-4 chars/second on Safari
-    // So chars needed ≈ waitMs / 1000 * 3.5
-    const chars = Math.max(1, Math.round((waitMs / 1000) * 3.5));
-    const silenceText = 'a'.repeat(Math.min(chars, 200)); // cap at 200
     const silence = new SpeechSynthesisUtterance(silenceText);
     silence.volume = 0;
     silence.lang = 'fr-FR';
@@ -859,10 +877,8 @@
     silence.onend = () => {
       if (!ttsChainActive || !timerRunning) return;
 
-      // Trigger visual display
       showInterruptionVisual(item);
 
-      // Speak the interruption
       const voices = window.speechSynthesis.getVoices();
       const frVoice = voices.find(v => v.lang.startsWith('fr') && !v.name.toLowerCase().includes('compact'))
                    || voices.find(v => v.lang.startsWith('fr')) || null;
@@ -875,8 +891,7 @@
       if (frVoice) utt.voice = frVoice;
 
       utt.onend = () => {
-        // Chain to next interruption
-        startTTSChain(items, index + 1);
+        startTTSChain(items, index + 1, chainStartTime);
       };
 
       window.speechSynthesis.speak(utt);
