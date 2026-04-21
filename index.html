@@ -175,7 +175,26 @@
   @keyframes timerPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
   .timer-controls { display: flex; gap: 7px; }
 
-  /* ── INTERRUPTION OVERLAY ── */
+  /* ── SYNTHESIS OVERLAY ── */
+  .synth-overlay {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.88);
+    background: rgba(5,8,20,0.97);
+    border: 1px solid rgba(232,255,71,0.3);
+    border-radius: 20px; padding: 22px 24px;
+    text-align: center; z-index: 110;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    max-width: 300px; width: 88%;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 0 40px rgba(232,255,71,0.06);
+  }
+  .synth-overlay.show { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
+  .synth-label { font-family: 'DM Sans', sans-serif; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(232,255,71,0.6); margin-bottom: 10px; }
+  .synth-text { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.85); line-height: 1.45; margin-bottom: 14px; }
+  .synth-timer { font-family: 'Unbounded', sans-serif; font-size: 36px; font-weight: 300; letter-spacing: -0.05em; color: #e8ff47; margin-bottom: 8px; line-height: 1; }
+  .synth-timer.urgent { color: rgba(255,107,53,0.9); animation: timerPulse 0.6s infinite; }
+  .synth-sub { font-family: 'DM Sans', sans-serif; font-size: 11px; color: var(--text-dim); font-style: italic; }
   .interruption-overlay { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.88); background: rgba(10,5,5,0.96); border: 1px solid rgba(255,60,60,0.25); border-radius: 16px; padding: 16px 22px; text-align: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.2s ease, transform 0.2s ease; max-width: 280px; width: 85%; backdrop-filter: blur(12px); }
   .interruption-overlay.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   .intr-label { font-family: 'DM Sans', sans-serif; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,80,80,0.6); margin-bottom: 6px; }
@@ -202,6 +221,14 @@
   <div class="intr-label">Interruption — continue</div>
   <div class="intr-text" id="interruptionText">—</div>
   <div class="intr-sub">ignore et poursuis</div>
+</div>
+
+<!-- Synthesis challenge overlay -->
+<div class="synth-overlay" id="synthOverlay">
+  <div class="synth-label">Synthèse — 20 secondes</div>
+  <div class="synth-text" id="synthText">—</div>
+  <div class="synth-timer" id="synthTimer">0:20</div>
+  <div class="synth-sub">Résume ton idée principale en une phrase.</div>
 </div>
 
 <div class="app">
@@ -304,6 +331,11 @@
         <div class="card-content" id="structureText">—</div>
       </div>
 
+      <div class="card" style="border-color:rgba(232,255,71,0.15);background:rgba(232,255,71,0.04)">
+        <div class="card-label">Si tu bloques — dis ça</div>
+        <div class="card-content" id="rescueText" style="font-size:12px;font-style:italic;color:#e8ff47">—</div>
+      </div>
+
       <div class="interruption-badge" id="intrBadge">
         <div class="badge-dot"></div>
         <div class="badge-text" id="intrBadgeText">—</div>
@@ -347,38 +379,38 @@
 </div>
 
 <script>
-  // ── 30 AMORCES ──
+  // ── 30 AMORCES — style réaction naturelle ──
   const amorces = [
-    "Ce que j'observe sur ce sujet c'est que…",
-    "Ma première réaction c'est…",
-    "Ce qui me frappe là-dedans c'est…",
-    "Il y a plusieurs angles mais l'essentiel c'est…",
-    "Ce que beaucoup de gens ratent c'est…",
-    "Ce que je pense vraiment c'est…",
-    "Si je devais résumer en une phrase…",
-    "Ce qui change tout dans ce cas c'est…",
-    "Ce qu'on oublie souvent c'est que…",
-    "La vraie question ici c'est…",
-    "Ce que ça révèle en fait c'est…",
-    "Contrairement à ce qu'on croit…",
-    "Ce qui me semble sous-estimé c'est…",
-    "En y réfléchissant vraiment…",
-    "Ce que l'expérience m'a appris c'est que…",
-    "Le paradoxe ici c'est que…",
-    "Ce que peu de gens réalisent c'est que…",
-    "Au fond le vrai problème c'est…",
-    "Ce qui est contre-intuitif c'est que…",
-    "Si on pousse la logique jusqu'au bout…",
-    "Ce que je trouve fascinant c'est que…",
-    "La distinction importante ici c'est…",
-    "Ce qui change la donne c'est…",
-    "En prenant du recul…",
-    "Ce que cette situation révèle c'est…",
-    "L'erreur commune ici c'est de croire que…",
-    "Ce qui est souvent mal compris c'est…",
-    "La vraie difficulté c'est que…",
-    "Ce que j'aurais tendance à dire c'est que…",
-    "En creusant un peu…"
+    "Je pense que…",
+    "Pour moi…",
+    "Ce que j'observe c'est que…",
+    "Ma réaction c'est…",
+    "Ce qui me frappe c'est que…",
+    "Franchement…",
+    "Ce que je crois vraiment c'est que…",
+    "En y réfléchissant…",
+    "Mon sentiment c'est que…",
+    "Ce que je retiens c'est que…",
+    "Si je suis honnête…",
+    "Ce que je constate c'est que…",
+    "Il me semble que…",
+    "Ce qui est clair pour moi c'est que…",
+    "Ce que j'ai toujours pensé c'est que…",
+    "À mon sens…",
+    "Ce que je remarque c'est que…",
+    "Instinctivement…",
+    "Ce sujet me fait penser que…",
+    "Ma première réaction c'est de dire que…",
+    "Je dirais que…",
+    "Ce que j'ai envie de dire c'est que…",
+    "Ce qui me vient spontanément c'est que…",
+    "Ce que ça m'inspire c'est que…",
+    "Sans hésiter…",
+    "Ce que je pense au fond c'est que…",
+    "Là-dessus je suis convaincu que…",
+    "Ce qui me semble évident c'est que…",
+    "Je suis persuadé que…",
+    "Ce que je ressens face à ça c'est que…"
   ];
 
   // ── 50 SUJETS ──
@@ -467,14 +499,35 @@
     "HUMOUR","CRÉATIVITÉ","ART","SPORT","SPIRITUALITÉ"
   ];
 
-  // ── 6 STRUCTURES ──
+  // ── PHRASES DE SECOURS ──
+  const rescues = [
+    "Ce que je veux dire c'est…",
+    "Pour être concret…",
+    "Je reformule…",
+    "L'idée que je peux faire passer ici c'est…",
+    "En d'autres termes…",
+    "Ce que j'essaie de dire c'est…",
+    "Pour simplifier…",
+    "Concrètement…",
+    "Ce qui compte vraiment ici c'est…",
+    "Pour aller à l'essentiel…",
+    "Ce que je voulais exprimer c'est…",
+    "En résumé…",
+    "Ce qui est important ici c'est…",
+    "En réalité il y a un point clé…",
+    "Si je simplifie…",
+    "La vraie question derrière ça c'est…",
+    "Je vais structurer en deux points…",
+    "Il y a deux éléments essentiels…",
+    "D'abord… ensuite…",
+    "L'idée que je voulais faire passer c'est…",
+    "Je reformule autrement…",
+    "Ce que je veux dire c'est que…"
+  ];
+
+  // ── STRUCTURE FIXE ──
   const structures = [
-    { label: "Opinion / observation", text: "IDÉE → EXPLICATION → EXEMPLE" },
-    { label: "Défendre une position", text: "POSITION → RAISON → BÉNÉFICE" },
-    { label: "Sujet de société", text: "CONSTAT → CAUSE → CONSÉQUENCE" },
-    { label: "Résoudre un problème", text: "PROBLÈME → SOLUTION → PREUVE" },
-    { label: "Raconter", text: "CONTEXTE → ACTION → RÉSULTAT" },
-    { label: "Convaincre", text: "ACCROCHE → ARGUMENT → APPEL À L'ACTION" }
+    { label: "Idée → Concrètement → Exemple", text: "IDÉE CLAIRE → CE QUE ÇA VEUT DIRE CONCRÈTEMENT → EXEMPLE SIMPLE" }
   ];
 
   // ── INTERRUPTIONS ──
@@ -653,6 +706,7 @@
       i < parts.length - 1 ? `${p.trim()}<span class="arrow"> → </span>` : p.trim()
     ).join('');
     document.getElementById('structureLabel').textContent = `Structure — ${structure.label}`;
+    document.getElementById('rescueText').textContent = pick(rescues);
 
     document.getElementById('recDot').classList.remove('active');
     document.getElementById('recRow').classList.remove('active');
@@ -673,10 +727,17 @@
     showPanel(2);
   }
 
-  function nextImpro() { clearAllInterruptions(); stopRecording(); currentImpro++; loadImpro(); }
+  function nextImpro() {
+    clearAllInterruptions(); stopRecording();
+    clearInterval(synthTimerInterval);
+    document.getElementById('synthOverlay').classList.remove('show');
+    currentImpro++; loadImpro();
+  }
 
   function nextSession() {
     clearAllInterruptions(); stopRecording();
+    clearInterval(synthTimerInterval);
+    document.getElementById('synthOverlay').classList.remove('show');
     sessionCount++; renderDots(); setPB(100);
     if (sessionCount === MIN && !milestoneShown) {
       milestoneShown = true;
@@ -721,6 +782,8 @@
           document.getElementById('timerBtn').disabled = true;
           stopRecording();
           if (transcript.trim().length > 10) document.getElementById('copyBtn').classList.add('visible');
+          playEndBeep();
+          setTimeout(() => triggerSynthesisChallenge(), 800);
         }
       }, 1000);
     }
@@ -799,7 +862,80 @@
     });
   }
 
-  // ── INTERRUPTIONS — Safari iOS TTS with dynamic calibration ──
+  // ── END BEEP ──
+  function playEndBeep() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const beepPattern = [0, 150, 300]; // 3 short beeps
+      beepPattern.forEach(offset => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.frequency.value = 880;
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0, ctx.currentTime + offset / 1000);
+        gain.gain.linearRampToValueAtTime(0.4, ctx.currentTime + offset / 1000 + 0.01);
+        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + offset / 1000 + 0.12);
+        osc.start(ctx.currentTime + offset / 1000);
+        osc.stop(ctx.currentTime + offset / 1000 + 0.15);
+      });
+    } catch(e) {}
+  }
+
+  // ── SYNTHESIS CHALLENGE ──
+  const synthesisPrompts = [
+    "Honnêtement, j'ai pas tout suivi. Tu peux me redire l'essentiel en une phrase ?",
+    "Attends, c'était quoi ton idée principale exactement ?",
+    "Je t'ai écouté mais j'ai besoin que tu résumes. En 20 secondes, c'est quoi le message ?",
+    "Excuse-moi, je me suis perdu. Qu'est-ce que tu voulais dire au fond ?",
+    "C'était intéressant mais flou pour moi. Tu peux synthétiser ?",
+    "Je vais être direct, j'ai besoin du pitch. Trente mots max.",
+    "Okay mais si tu devais retenir une seule chose de ce que tu viens de dire ?",
+    "T'as dit plein de choses, mais quel est le vrai message ?"
+  ];
+
+  let synthTimerInterval = null;
+  let synthTimeLeft = 20;
+
+  function triggerSynthesisChallenge() {
+    const prompt = pick(synthesisPrompts);
+    document.getElementById('synthText').textContent = `"${prompt}"`;
+    synthTimeLeft = 20;
+    document.getElementById('synthTimer').textContent = '0:20';
+    document.getElementById('synthTimer').classList.remove('urgent');
+    document.getElementById('synthOverlay').classList.add('show');
+
+    // Speak the prompt
+    if (ttsOK) {
+      const voices = window.speechSynthesis.getVoices();
+      const frVoice = voices.find(v => v.lang.startsWith('fr') && !v.name.toLowerCase().includes('compact'))
+                   || voices.find(v => v.lang.startsWith('fr')) || null;
+      const utt = new SpeechSynthesisUtterance(prompt);
+      utt.lang = 'fr-FR'; utt.rate = 0.9; utt.pitch = 1.0; utt.volume = 1.0;
+      if (frVoice) utt.voice = frVoice;
+      utt.onend = () => startSynthTimer();
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utt);
+    } else {
+      setTimeout(() => startSynthTimer(), 500);
+    }
+  }
+
+  function startSynthTimer() {
+    clearInterval(synthTimerInterval);
+    synthTimerInterval = setInterval(() => {
+      synthTimeLeft--;
+      document.getElementById('synthTimer').textContent = `0:${synthTimeLeft.toString().padStart(2,'0')}`;
+      if (synthTimeLeft <= 5) document.getElementById('synthTimer').classList.add('urgent');
+      if (synthTimeLeft <= 0) {
+        clearInterval(synthTimerInterval);
+        playEndBeep();
+        setTimeout(() => {
+          document.getElementById('synthOverlay').classList.remove('show');
+        }, 600);
+      }
+    }, 1000);
+  }
   // Safari's char-based silence is unpredictable. We calibrate at Start:
   // speak a known-length string, measure actual duration via onend, derive chars/ms ratio.
 
