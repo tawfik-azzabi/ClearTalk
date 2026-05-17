@@ -188,7 +188,7 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
     <!-- PANEL 0: BREATH -->
     <div class="panel active" id="panel0">
       <div class="brand-bar"><div class="app-name">ClearTalk</div><div class="app-tagline">Flow Under Pressure</div>
-          <div style="font-family:'DM Sans',sans-serif;font-size:9px;color:rgba(255,255,255,0.15);letter-spacing:0.15em;margin-top:4px">v.1.2.024</div></div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:9px;color:rgba(255,255,255,0.15);letter-spacing:0.15em;margin-top:4px">v.1.2.023</div></div>
       <div class="section-header"><div class="section-title">Rituel d'activation</div></div>
       <div class="breath-center">
         <div class="breath-ring-outer">
@@ -298,36 +298,38 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
 <script>
 const chainWords=["MÉTÉO","VACANCES","FAMILLE","CUISINE","MUSIQUE","SANTÉ","VOYAGE","ARGENT","SPORT","MODE","IMMOBILIER","RETRAITE","VOISINS","EMBOUTEILLAGES","WEEK-END","SOMMEIL","ALIMENTATION","JARDINAGE","LECTURE","CINÉMA","AMITIÉ","CONFIANCE","JALOUSIE","SOLITUDE","NOSTALGIE","AMOUR","TRAHISON","PARDON","EMPATHIE","FIERTÉ","INFLATION","ÉLECTION","CLIMAT","RÉSEAUX","ALGORITHME","DÉSINFORMATION","SOBRIÉTÉ","TÉLÉTRAVAIL","BURN-OUT","MIGRATION","INÉGALITÉS","GÉNÉRATION","LIBERTÉ","IDENTITÉ","FRONTIÈRES","DÉMOCRATIE","CRISE","MÉDIAS","INTELLIGENCE","ROBOTIQUE","CRYPTOMONNAIE","DONNÉES","SURVEILLANCE","INNOVATION","STARTUP","DISRUPTION","AUTOMATISATION","ÉNERGIE","BIODIVERSITÉ","TRANSITION","AMBITION","CARRIÈRE","NÉGOCIATION","LEADERSHIP","STRATÉGIE","FEEDBACK","RÉSILIENCE","PERFORMANCE","MANAGEMENT","CROISSANCE","INFLUENCE","AGILITÉ","RÉSEAU","RECRUTEMENT","PROMOTION","BONHEUR","TEMPS","MÉMOIRE","HASARD","SUCCÈS","ÉCHEC","COURAGE","PATIENCE","JUSTICE","VÉRITÉ","POUVOIR","SENS","RÊVE","EDUCATION","TRANSMISSION","HÉRITAGE","TRADITION","MODERNITÉ","HUMOUR","CRÉATIVITÉ","ART","SPIRITUALITÉ","ÉQUILIBRE","AUTHENTICITÉ","VULNÉRABILITÉ","COHÉRENCE","TRANSFORMATION","CONVICTION","ARBITRAGE","PROGRAMME","BUDGET","DÉCISION","PRIORITÉ","OBJECTION","DISCOURS","RÉGULARISATION","COMEX","PARTENAIRE","CONSULTANT","INTÉGRATEUR","DÉMARCHE","SCOLARITÉ","PARENTALITÉ","ADOLESCENCE","NUTRITION","JEÛNE","PERFORMANCE","WOKE","ENTREPRENEURIAT","VOYAGE","RELIGION","SYSTÈMES","RIGUEUR","CONTEXTE","PRESSION","IMPLICATION"];
 const TOPICS=[
-  {t:"Ton DG t'interpelle en comité : 'Où en est le programme Supply Chain ? 2 minutes.' Pas préparé.",a:"On est à ce stade…",s:"Je vais structurer…"},
-  {t:"Appel imprévu du président : 'Dis-moi où en est le programme RH. Tu as 3 minutes.'",a:"Sur le programme RH…",s:"Je reformule…"},
-  {t:"En réunion de direction : 'Le programme EPM, c'est où ?' Tout le monde attend.",a:"Sur EPM…",s:"Je vais structurer en deux points…"},
-  {t:"Ton N+1 t'appelle entre deux réunions : 'Phénix, c'est en bonne voie ? Rassure-moi en 2 minutes.'",a:"Sur Phénix…",s:"Le point critique c'est…"},
-  {t:"En COMEX, un membre : 'La trajectoire SAP — vous tenez le cap ? Résumez en 2 minutes.'",a:"Sur la trajectoire SAP…",s:"Je vais aller à l'essentiel…"},
-  {t:"Un sponsor te croise dans un couloir : 'Les releases — vous êtes dans le rythme ? 2 minutes.'",a:"Sur les releases…",s:"Pour résumer…"},
-  {t:"Un collègue te demande : 'Tu te vois encore dans cette boîte dans 3 ans ?' La question est directe.",a:"Honnêtement…",s:"Pour être honnête…"},
-  {t:"Tu dois demander une régularisation salariale. Ton manager t'écoute. Tu as 2 minutes.",a:"Ce que je veux aborder c'est…",s:"L'argument principal c'est…"},
-  {t:"Quelqu'un te demande ton avis sur le format du COMEX dans ton entreprise. Tu as une vraie opinion.",a:"Ce que j'observe c'est…",s:"L'idée principale c'est…"},
-  {t:"Un ami consultant : 'Les cabinets de conseil en transformation — ça apporte vraiment de la valeur ?'",a:"Ma position c'est…",s:"Pour nuancer…"},
-  {t:"Un collègue en informel : 'Les projets de transformation ça ne marche jamais vraiment. T'en penses quoi ?'",a:"Je ne suis pas d'accord parce que…",s:"L'argument principal c'est…"},
-  {t:"Ton manager : 'Si tu devais choisir une priorité sur tes programmes pour les 6 prochains mois, laquelle ?'",a:"Sans hésiter…",s:"Pour justifier ce choix…"},
-  {t:"After work : 'Tu gères comment la pression quand plusieurs programmes sont en tension en même temps ?'",a:"Ce que j'ai appris c'est…",s:"Ce qui m'aide vraiment c'est…"},
-  {t:"Un RH pour un bilan : 'Quelle est ta plus grande réussite des 12 derniers mois ?' Sans sous-vendre.",a:"Ce dont je suis le plus fier c'est…",s:"L'impact c'est…"},
-  {t:"Invité surprise à un pot de départ, on te donne le micro : 'Dis un mot sur [prénom].' Rien préparé.",a:"Ce que je retiens de lui c'est…",s:"Ce que j'apprécie vraiment c'est…"},
+  // PRO — DSI
+  {t:"Le PDG te croise dans un couloir : 'Alors ce projet critique, on en est où ?' Tu n'as pas les chiffres exacts en tête.",a:"On est à ce stade…",s:"Pour aller à l'essentiel…"},
+  {t:"Appel imprévu du PDG en fin de journée : 'Il y a eu un incident ce matin, qu'est-ce qui s'est passé exactement ?'",a:"Ce que je sais à ce stade c'est…",s:"Je vais structurer en deux points…"},
+  {t:"En COMEX, un administrateur : 'La transformation digitale chez vous, ça avance concrètement ?' 90 secondes max.",a:"Trois éléments concrets…",s:"Pour résumer…"},
+  {t:"Un DG métier avant une réunion : 'Mes équipes me disent que l'IT ne répond plus assez vite. C'est quoi le problème ?'",a:"Je comprends le constat…",s:"Ce que je peux dire c'est…"},
+  {t:"Le PDG en aparté : 'Tu prends la fonction ou pas — on en est où toi dans ta tête ?'",a:"Ma position est claire…",s:"Ce que j'attends c'est…"},
+  {t:"Le DAF en réunion : 'Ce budget IT est trop élevé. Qu'est-ce que tu peux enlever sans impacter le business ?'",a:"Je comprends la contrainte…",s:"L'arbitrage que je propose c'est…"},
+  {t:"Un DG métier : 'Vous concentrez tout sur un seul périmètre, nous on attend depuis 6 mois.'",a:"Le constat est légitime…",s:"Ce que je peux proposer c'est…"},
+  {t:"Un fournisseur stratégique en réunion : 'On apprend que vous regardez d'autres prestataires. On voudrait comprendre.'",a:"Je vais être direct…",s:"La logique derrière c'est…"},
+  {t:"Un N-1 en bilatéral : 'Mes équipes ne tiendront pas la charge actuelle. Je te le dis maintenant.'",a:"Je t'entends…",s:"Ce qu'on peut faire c'est…"},
+  {t:"Le PDG frontalement : 'Donne-moi un chiffre — combien d'incidents critiques le mois dernier ?'",a:"L'ordre de grandeur c'est…",s:"Je te confirme le chiffre précis d'ici…"},
+  {t:"Un N-1 ancien candidat au poste conteste ta décision devant le groupe : 'C'est pas comme ça qu'on a toujours fait ici.'",a:"Je comprends la réserve…",s:"Ma décision repose sur…"},
+  {t:"Un consultant externe a pris une initiative directement avec le PDG sans passer par toi.",a:"Ce que je veux clarifier c'est…",s:"Le fonctionnement que j'attends c'est…"},
+  {t:"En réunion, on te demande de trancher un désaccord technique entre deux N-1 sur un sujet que tu maîtrises encore mal.",a:"Ce que j'entends des deux côtés c'est…",s:"Ma décision c'est…"},
+  {t:"La DRH : 'Trois recrutements stratégiques en 60 jours c'est irréaliste. Il va falloir choisir.'",a:"Ces trois postes sont non négociables parce que…",s:"Le séquencement que je propose c'est…"},
+  {t:"Un directeur métier en réunion : 'Vous êtes DSI par intérim — vous avez vraiment la main pour prendre cette décision ?'",a:"Ma position sur ce sujet est claire…",s:"La décision que je prends c'est…"},
+  // PERSO
   {t:"À la salle, quelqu'un : 'Le jeûne intermittent, ça marche vraiment ou c'est du marketing ?' Ton avis sincère.",a:"Pour moi…",s:"L'idée principale c'est…"},
   {t:"Un ami : 'Le sport intensif après 40 ans c'est dangereux. Tu devrais lever le pied.' Tu n'es pas d'accord.",a:"Je comprends l'idée mais…",s:"L'essentiel c'est…"},
-  {t:"En soirée avec des parents : 'Les ados sont accros aux réseaux, on a perdu la main.' Réponds sans généraliser.",a:"Ce que j'observe c'est…",s:"Deux éléments…"},
+  {t:"En soirée avec des parents : 'Les ados sont accros aux réseaux, on a perdu la main.' Réponds sans généraliser.",a:"Ce que j'observe c'est…",s:"Ce qui marche chez nous c'est…"},
   {t:"Un parent d'élève : 'Tu fais quoi pour gérer la pression scolaire avec tes enfants ?' Il cherche une vraie réponse.",a:"Honnêtement…",s:"Ce qui fonctionne c'est…"},
   {t:"After work : 'L'IA va supprimer la moitié des emplois dans 5 ans. C'est une certitude.' Tu as un avis nuancé.",a:"Je ne suis pas convaincu que…",s:"L'argument principal c'est…"},
-  {t:"En dîner : 'Toi qui bosses dans la transformation, les boîtes françaises sont en retard sur l'IA ?'",a:"Ma perception c'est…",s:"Pour simplifier…"},
   {t:"Un ami : 'J'hésite à quitter mon CDI pour me lancer. Toi tu me conseillerais quoi ?' Il veut vraiment ton avis.",a:"Ce que je pense vraiment c'est…",s:"Ce qui compte vraiment c'est…"},
   {t:"En soirée : 'Parent célibataire et carrière exigeante en même temps — comment tu tiens ?' Question sincère.",a:"Ce que j'ai appris c'est…",s:"Ce qui m'aide c'est…"},
   {t:"Un ami : 'Le mouvement woke — avancée sociale ou dérive ?' Il est dans une position inverse à la tienne.",a:"Ma position c'est…",s:"Ce que je veux dire c'est…"},
   {t:"En dîner : 'Le régime hyperprotéiné c'est dangereux pour les reins. T'as pas peur ?' Tu maîtrises le sujet.",a:"C'est une idée répandue mais…",s:"Le point clé c'est…"},
-  {t:"Un ami direct : 'Tu m'en parles depuis 2 ans de ce voyage. Pourquoi t'as jamais sauté le pas ?'",a:"Honnêtement…",s:"Ce que je réalise c'est…"},
-  {t:"En dîner : 'Les gens qui manquent de temps n'ont juste pas les bonnes priorités.' Tout le monde acquiesce.",a:"Je comprends l'idée mais…",s:"Ce que je veux dire c'est…"},
   {t:"Un ami : 'C'est quoi la dernière chose que t'as lue ou regardée qui t'a vraiment marqué ?' 2 minutes.",a:"Ce qui m'a marqué c'est…",s:"L'idée principale c'est…"},
   {t:"Dans un groupe : 'La religion aujourd'hui c'est du repli identitaire.' Tu n'es pas d'accord.",a:"Ce que je pense c'est…",s:"L'essentiel selon moi c'est…"},
-  {t:"Un parent d'élève : 'Le système scolaire français prépare vraiment nos enfants au monde de demain ?'",a:"Ma conviction c'est…",s:"Pour aller à l'essentiel…"}
+  {t:"Un parent d'élève : 'Le système scolaire français prépare vraiment nos enfants au monde de demain ?'",a:"Ma conviction c'est…",s:"Pour aller à l'essentiel…"},
+  {t:"Un ami te demande : 'DSI par intérim c'est quoi la différence avec le vrai poste ? T'as vraiment le pouvoir ?'",a:"La différence concrète c'est…",s:"Ce qui compte c'est…"},
+  {t:"En soirée : 'Diriger 100 personnes sans être un pur technicien, comment tu gères ta légitimité ?'",a:"Ma légitimité elle vient de…",s:"Ce que j'ai appris c'est…"},
+  {t:"À un dîner : 'Le télétravail — t'es pour ou contre franchement ?' Tu le vis au quotidien avec tes équipes.",a:"Ma position c'est…",s:"Ce que j'observe concrètement c'est…"}
 ];
 const interruptions=[{text:"Excuse-moi de t'interrompre…",voice:"Excuse-moi de t'interrompre"},{text:"Je ne suis pas sûr de te suivre",voice:"Je ne suis pas sûr de te suivre"},{text:"C'est trop théorique non ?",voice:"C'est trop théorique, non ?"},{text:"On s'éloigne du sujet",voice:"On s'éloigne du sujet"},{text:"Tu peux aller plus vite ?",voice:"Tu peux aller plus vite ?"},{text:"J'ai une question là-dessus",voice:"J'ai une question là-dessus"},{text:"C'est pas ce qu'on avait convenu",voice:"C'est pas ce qu'on avait convenu"},{text:"Tu as des chiffres pour ça ?",voice:"Tu as des chiffres pour ça ?"},{text:"Ça a déjà été essayé",voice:"Ça a déjà été essayé"},{text:"Oui mais concrètement ?",voice:"Oui, mais concrètement ?"},{text:"Attends je t'arrête là",voice:"Attends, je t'arrête là"},{text:"Sérieusement ?",voice:"Sérieusement ?"},{text:"Mouais… pas convaincu",voice:"Mouais, pas convaincu"},{text:"T'es sûr de ce que tu dis ?",voice:"T'es sûr de ce que tu dis ?"},{text:"Je vois pas le rapport",voice:"Je vois pas le rapport"},{text:"C'est discutable ça",voice:"C'est discutable, ça"},{text:"Tout le monde pense l'inverse",voice:"Tout le monde pense l'inverse"},{text:"Mon expérience c'est le contraire",voice:"Mon expérience, c'est le contraire"}];
 const synthesisPrompts=["J'ai pas tout suivi. Tu peux me redire l'essentiel en une phrase ?","Attends, c'était quoi ton idée principale exactement ?","Je t'ai écouté mais j'ai besoin que tu résumes. En vingt secondes, c'est quoi le message ?","Excuse-moi, je me suis perdu. Qu'est-ce que tu voulais dire au fond ?","C'était intéressant mais flou pour moi. Tu peux synthétiser ?","Je vais être direct, j'ai besoin du pitch. Trente mots max.","Okay mais si tu devais retenir une seule chose de ce que tu viens de dire ?","T'as dit plein de choses, mais quel est le vrai message ?"];
